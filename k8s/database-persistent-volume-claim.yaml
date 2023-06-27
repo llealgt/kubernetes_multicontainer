@@ -1,0 +1,12 @@
+# represents not actual storage but a storage request
+apiVersion: v1
+kind: PersistentVolumeClaim 
+metadata:
+  name: database-persistent-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce #can be used by a single node at a time
+  resources:
+    requests:
+      storage: 2Gi
+      

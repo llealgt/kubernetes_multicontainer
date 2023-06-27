@@ -1,0 +1,13 @@
+# ClusterIP service exposes objects to other objects inside the cluster
+# used for internal networking inside the cluster(contrary to NodePort used for exposing objects to the outside world)
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector: # this is where we define which object this  ClusterIP points to(or gives acces to)
+    component: web
+  ports:
+    - port: 3000 # ports used by other objects to communicate with this ClusterIP
+      targetPort: 3000 #the port to reach inside the pods
