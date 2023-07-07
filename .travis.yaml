@@ -1,0 +1,27 @@
+sudo: required
+services:
+  - docker
+env:
+  global:
+    - GIT_SHA=$(git rev-parse HEAD)
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
+before_install:
+  - openssl aes-256-cbc -K $encrypted_99678ea25995_key -iv $encrypted_99678ea25995_iv -in kubernetes-multicontainer-3d17e8b64fca.json.enc -out kubernetes-multicontainer-3d17e8b64fca.json -d
+  - curl https://sdk.cloud.google.com | bash > /dev/null;
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file kubernetes-multicontainer-3d17e8b64fca.json.enc
+  - gcloud config set project kubernetes-multicontainer
+  - gcloud config set conpute compute/zone us-central1-a
+  - gcloud container clusters get-credentials kubernetes-multicontainer
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t llealgt/kubernetes_multicontainer -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run llealgt/kubernetes_multicontainer npn test -- --coverage
+
+deploy:
+  provider: script
+  script: ./deploy.sh
+  on:
+    branch: master
