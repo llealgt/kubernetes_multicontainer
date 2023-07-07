@@ -12,7 +12,7 @@ before_install:
   - gcloud components update kubectl
   - gcloud auth activate-service-account --key-file kubernetes-multicontainer-3d17e8b64fca.json
   - gcloud config set project kubernetes-multicontainer
-  - gcloud config set compute compute/zone us-central1-a
+  - gcloud config set compute/zone us-central1-a
   - gcloud container clusters get-credentials kubernetes-multicontainer
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t llealgt/kubernetes_multicontainer -f ./client/Dockerfile.dev ./client
